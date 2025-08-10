@@ -80,6 +80,16 @@ const DonationPlatform = () => {
     setDonationState(prev => ({ ...prev, ...updates }));
   };
 
+  const updateContactInfo = (field: keyof DonationState['contactInfo'], value: string) => {
+    setDonationState(prev => ({
+      ...prev,
+      contactInfo: {
+        ...prev.contactInfo,
+        [field]: value
+      }
+    }));
+  };
+
   const nextStep = () => {
     if (donationState.step < DONATION_STEPS.length - 1) {
       updateState({ step: donationState.step + 1 });
@@ -405,9 +415,7 @@ const DonationPlatform = () => {
                 id="name"
                 placeholder="John Doe"
                 value={donationState.contactInfo.name}
-                onChange={(e) => updateState({ 
-                  contactInfo: { ...donationState.contactInfo, name: e.target.value }
-                })}
+                onChange={(e) => updateContactInfo('name', e.target.value)}
               />
             </div>
             <div>
@@ -417,9 +425,7 @@ const DonationPlatform = () => {
                 type="email"
                 placeholder="john@example.com"
                 value={donationState.contactInfo.email}
-                onChange={(e) => updateState({ 
-                  contactInfo: { ...donationState.contactInfo, email: e.target.value }
-                })}
+                onChange={(e) => updateContactInfo('email', e.target.value)}
               />
             </div>
             <div>
@@ -428,9 +434,7 @@ const DonationPlatform = () => {
                 id="phone"
                 placeholder="(555) 123-4567"
                 value={donationState.contactInfo.phone}
-                onChange={(e) => updateState({ 
-                  contactInfo: { ...donationState.contactInfo, phone: e.target.value }
-                })}
+                onChange={(e) => updateContactInfo('phone', e.target.value)}
               />
             </div>
           </div>
