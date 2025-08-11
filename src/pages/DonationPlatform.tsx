@@ -22,9 +22,15 @@ import {
   Home,
   Calculator,
   CreditCard,
-  Receipt
+  Receipt,
+  LogOut
 } from 'lucide-react';
 import heroImage from '@/assets/charity-hero.jpg';
+
+interface DonationPlatformProps {
+  onLogout: () => void;
+  user: { email: string; role: string; name: string };
+}
 
 interface DonationState {
   step: number;
@@ -55,7 +61,7 @@ const DONATION_STEPS = [
   'Confirmation'
 ];
 
-const DonationPlatform = () => {
+const DonationPlatform = ({ onLogout, user }: DonationPlatformProps) => {
   const { toast } = useToast();
   const [donationState, setDonationState] = useState<DonationState>({
     step: 0,
@@ -767,12 +773,34 @@ const DonationPlatform = () => {
 
   return (
     <div className="min-h-screen bg-gradient-subtle">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary mb-2">Akhuwat USA</h1>
-          <p className="text-muted-foreground">Used Clothes Donation Platform</p>
+      {/* Header */}
+      <div className="bg-background/95 backdrop-blur-sm border-b border-accent/20 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Heart className="w-8 h-8 text-primary" />
+              <div>
+                <h1 className="text-2xl font-bold text-primary">Akhuwat USA</h1>
+                <p className="text-sm text-muted-foreground">Used Clothes Donation Platform</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground">Welcome, {user.name}</span>
+              <Badge variant="secondary" className="hidden sm:flex">
+                Tax Deductible
+              </Badge>
+              <Badge variant="secondary" className="hidden sm:flex">
+                501(c)(3) Nonprofit
+              </Badge>
+              <Button variant="outline" size="sm" onClick={onLogout}>
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
+          </div>
         </div>
+      </div>
+      <div className="container mx-auto px-4 py-8">
 
         {/* Step Indicator */}
         {donationState.step > 0 && <StepIndicator />}

@@ -24,8 +24,15 @@ import {
   CheckCircle,
   AlertCircle,
   TrendingUp,
-  Clock
+  Clock,
+  LogOut,
+  Shield
 } from 'lucide-react';
+
+interface AdminDashboardProps {
+  onLogout: () => void;
+  user: { email: string; role: string; name: string };
+}
 
 interface Donation {
   id: string;
@@ -43,7 +50,7 @@ interface Donation {
   trackingNumber?: string;
 }
 
-const AdminDashboard = () => {
+const AdminDashboard = ({ onLogout, user }: AdminDashboardProps) => {
   const { toast } = useToast();
   const [selectedPeriod, setSelectedPeriod] = useState('30');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -174,62 +181,67 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-subtle">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-primary">Admin Dashboard</h1>
-            <p className="text-muted-foreground">Akhuwat USA Donation Management</p>
-          </div>
-          <div className="flex space-x-3">
-            <Button variant="outline" onClick={exportData}>
-              <Download className="w-4 h-4 mr-2" />
-              Export Data
-            </Button>
-            <Button variant="default" onClick={sendBulkEmail}>
-              <Mail className="w-4 h-4 mr-2" />
-              Send Thank You Emails
-            </Button>
+      {/* Header */}
+      <div className="bg-background/95 backdrop-blur-sm border-b border-accent/20 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Shield className="w-8 h-8 text-primary" />
+              <div>
+                <h1 className="text-2xl font-bold text-primary">Akhuwat USA Admin</h1>
+                <p className="text-sm text-muted-foreground">Donation Management Dashboard</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground">Admin: {user.name}</span>
+              <Badge variant="secondary">Admin Access</Badge>
+              <Button variant="outline" size="sm" onClick={exportData}>
+                <Download className="w-4 h-4 mr-2" />
+                Export Data
+              </Button>
+              <Button variant="outline" size="sm" onClick={onLogout}>
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
-
+      </div>
+      <div className="container mx-auto px-4 py-8">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="p-6 shadow-card">
-            <div className="flex items-center justify-between">
+          <Card className="shadow-elegant">
+            <div className="flex items-center justify-between p-6">
               <div>
                 <p className="text-muted-foreground text-sm font-medium">Total Donations</p>
                 <p className="text-2xl font-bold">{stats.totalDonations}</p>
-                <p className="text-xs text-success">+{stats.thisMonth} this month</p>
+                <p className="text-xs text-success">+12% from last month</p>
               </div>
               <Package className="w-8 h-8 text-primary" />
             </div>
           </Card>
-
-          <Card className="p-6 shadow-card">
-            <div className="flex items-center justify-between">
+          <Card className="shadow-elegant">
+            <div className="flex items-center justify-between p-6">
+              <div>
+                <p className="text-muted-foreground text-sm font-medium">Active Donors</p>
+                <p className="text-2xl font-bold">{stats.thisMonth}</p>
+                <p className="text-xs text-success">+5% from last month</p>
+              </div>
+              <Users className="w-8 h-8 text-primary" />
+            </div>
+          </Card>
+          <Card className="shadow-elegant">
+            <div className="flex items-center justify-between p-6">
               <div>
                 <p className="text-muted-foreground text-sm font-medium">Total Value</p>
                 <p className="text-2xl font-bold">${stats.totalValue.toLocaleString()}</p>
-                <p className="text-xs text-success">Tax deductible</p>
+                <p className="text-xs text-success">+8% from last month</p>
               </div>
               <DollarSign className="w-8 h-8 text-primary" />
             </div>
           </Card>
-
-          <Card className="p-6 shadow-card">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-muted-foreground text-sm font-medium">Contributions</p>
-                <p className="text-2xl font-bold">${stats.totalContributions.toLocaleString()}</p>
-                <p className="text-xs text-muted-foreground">Operational costs</p>
-              </div>
-              <TrendingUp className="w-8 h-8 text-primary" />
-            </div>
-          </Card>
-
-          <Card className="p-6 shadow-card">
-            <div className="flex items-center justify-between">
+          <Card className="shadow-elegant">
+            <div className="flex items-center justify-between p-6">
               <div>
                 <p className="text-muted-foreground text-sm font-medium">Pending Pickups</p>
                 <p className="text-2xl font-bold">{stats.pendingPickups}</p>
